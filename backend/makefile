@@ -1,6 +1,8 @@
+run:
+	docker stop addis-test-container
+	docker rm addis-test-container
+	docker build -t addis-test .
+	docker run -d -p 3600:3600 --name addis-test-container addis-test
+
 log:
-	docker compose logs -f
-log-node:
-	docker compose logs -f --tail=1000 addis-test-backend
-start:
-	docker compose up -d --build
+	docker logs -f addis-test-container
