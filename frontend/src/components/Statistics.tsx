@@ -1,18 +1,8 @@
 /** @jsxImportSource @emotion/react */
-
 import React from "react";
-import styled from "@emotion/styled";
-import { css } from '@emotion/react';
-
-interface AnalyticsData {
-  totalSongs: number;
-  totalArtists: number;
-  totalAlbums: number;
-  totalGenres: number;
-  genreCounts: { genre: string; count: number }[];
-  artistCounts: { artist: string; count: number }[];
-  albumCounts: { album: string; count: number }[];
-}
+import { css } from "@emotion/react";
+import { AnalyticsCard, AnalyticsTitle, AnalyticsContainer,AnalyticsTableContainer } from "./styled/statistics";
+import { AnalyticsData } from "../types/Statitstics-type";
 
 const sampleAnalyticsData: AnalyticsData = {
   totalSongs: 100,
@@ -27,6 +17,10 @@ const sampleAnalyticsData: AnalyticsData = {
   artistCounts: [
     { artist: "John Doe", count: 10 },
     { artist: "Jane Smith", count: 15 },
+    { artist: "Jane Smith", count: 15 },
+    { artist: "Jane Smith", count: 15 },
+    { artist: "Jane Smith", count: 15 },
+    { artist: "Jane Smith", count: 15 },
     { artist: "Bob Johnson", count: 25 },
   ],
   albumCounts: [
@@ -36,41 +30,77 @@ const sampleAnalyticsData: AnalyticsData = {
   ],
 };
 
-const AnalyticsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: left;
-`;
 
-const AnalyticsCard = styled.div`
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  width: 180px;
 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+const renderTable = (data: any, keyName: string) => {
+  const [startIndex, setStartIndex] = React.useState(0);
+  const rowsToShow = 2;
 
-const AnalyticsTitle = styled.h2`
-  font-size: 1rem;
-`;
+  const visibleData = data.slice(startIndex, startIndex + rowsToShow);
 
-const AnalyticsList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const AnalyticsListItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
+  const handleLoadMore = () => {
+    if (startIndex + rowsToShow < data.length) {
+      setStartIndex(startIndex + rowsToShow);
+    }
+  };
+  return (
+    <AnalyticsCard>
+      <table
+        css={css`
+          width: 100%;
+          text-transform: capitalize;
+          padding: 6px;
+        `}
+      >
+        <thead>
+          <tr
+            css={css`
+              display: flex;
+              justify-content: space-between;
+            `}
+          >
+            <th>{keyName}</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleData.map((item: any) => (
+            <tr
+              key={item[keyName]}
+              css={css`
+                display: flex;
+                justify-content: space-between;
+              `}
+            >
+              <td>{item[keyName]}</td>
+              <td>{item.count}</td>
+            </tr>
+          ))}
+        </tbody>
+        {data.length > rowsToShow && startIndex + rowsToShow < data.length && (
+          <tfoot>
+            <tr>
+              <td colSpan={2}>
+                <button onClick={handleLoadMore}>Load More</button>
+              </td>
+            </tr>
+          </tfoot>
+        )}
+      </table>
+    </AnalyticsCard>
+  );
+};
 
 const Statistics: React.FC = () => {
   return (
-<div css={css`display: flex; flex-direction: column;align-items: right; padding: 10px`}>
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        align-items: right;
+        padding: 10px;
+      `}
+    >
       <h1>Statistics</h1>
       <AnalyticsContainer>
         <AnalyticsCard>
@@ -92,43 +122,13 @@ const Statistics: React.FC = () => {
           <AnalyticsTitle>Total Genres</AnalyticsTitle>
           <p>{sampleAnalyticsData.totalGenres}</p>
         </AnalyticsCard>
-
-        <AnalyticsCard>
-          <AnalyticsTitle>Genre Counts</AnalyticsTitle>
-          <AnalyticsList>
-            {sampleAnalyticsData.genreCounts.map((genreCount) => (
-              <AnalyticsListItem key={genreCount.genre}>
-                <span>{genreCount.genre}</span>
-                <span>{genreCount.count}</span>
-              </AnalyticsListItem>
-            ))}
-          </AnalyticsList>
-        </AnalyticsCard>
-
-        <AnalyticsCard>
-          <AnalyticsTitle>Artist Counts</AnalyticsTitle>
-          <AnalyticsList>
-            {sampleAnalyticsData.artistCounts.map((artistCount) => (
-              <AnalyticsListItem key={artistCount.artist}>
-                <span>{artistCount.artist}</span>
-                <span>{artistCount.count}</span>
-              </AnalyticsListItem>
-            ))}
-          </AnalyticsList>
-        </AnalyticsCard>
-
-        <AnalyticsCard>
-          <AnalyticsTitle>Album Counts</AnalyticsTitle>
-          <AnalyticsList>
-            {sampleAnalyticsData.albumCounts.map((albumCount) => (
-              <AnalyticsListItem key={albumCount.album}>
-                <span>{albumCount.album}</span>
-                <span>{albumCount.count}</span>
-              </AnalyticsListItem>
-            ))}
-          </AnalyticsList>
-        </AnalyticsCard>
       </AnalyticsContainer>
+
+      <AnalyticsTableContainer>
+        {renderTable(sampleAnalyticsData.genreCounts, "genre")}
+        {renderTable(sampleAnalyticsData.artistCounts, "artist")}
+        {renderTable(sampleAnalyticsData.albumCounts, "album")}
+      </AnalyticsTableContainer>
     </div>
   );
 };

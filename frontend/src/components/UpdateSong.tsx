@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Back from "../assets/back.svg";
 import {
@@ -10,47 +10,51 @@ import {
   BackButton,
   Overlay,
 } from "./styled/form";
-interface SongFormProps {
-  onBackClick: () => void;
-}
+import { SongFormProps } from "../types/Prop-types";
 
-const SongForm: React.FC<SongFormProps> = ({ onBackClick }) => {
-  const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
-  const [album, setAlbum] = useState("");
-  const [genre, setGenre] = useState("");
+
+const UpdateSongForm: React.FC<SongFormProps> = ({ onBackClick, title: initialTitle, artist: initialArtist, album: initialAlbum, genre: initialGenre }) => {
+  const [title, setTitle] = useState(initialTitle || "");
+  const [artist, setArtist] = useState(initialArtist || "");
+  const [album, setAlbum] = useState(initialAlbum || "");
+  const [genre, setGenre] = useState(initialGenre || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setAlbum("");
-    setArtist("");
-    setGenre("");
-    setTitle("");
+    // Your form submission logic here
   };
+
+  // Use useEffect to update the state when props change
+  useEffect(() => {
+    setTitle(initialTitle || "");
+    setArtist(initialArtist || "");
+    setAlbum(initialAlbum || "");
+    setGenre(initialGenre || "");
+  }, [initialTitle, initialArtist, initialAlbum, initialGenre]);
 
   return (
     <>
-    <Overlay />
-    <ModalContainer>
-      <div
-        css={css`
-          display: flex;
-          justify-content: space-between;
-        `}
-      >
-        <div></div>
-        <BackButton onClick={onBackClick}><img src={Back} alt="" /></BackButton>
-      </div>
-      <div
-        css={css`
-          margin-bottom: 15px;
-          font-size: 20px;
-          font-weight: bold;
-        `}
-      >
-        Add New Song
-      </div>
-      <form onSubmit={handleSubmit}>
+      <Overlay />
+      <ModalContainer>
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+          `}
+        >
+          <div></div>
+          <BackButton onClick={onBackClick}><img src={Back} alt="" /></BackButton>
+        </div>
+        <div
+          css={css`
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: bold;
+          `}
+        >
+          Add New Song
+        </div>
+        <form onSubmit={handleSubmit}>
         <label
           htmlFor="title"
           css={css`
@@ -111,19 +115,13 @@ const SongForm: React.FC<SongFormProps> = ({ onBackClick }) => {
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
         />
-        <div
-          css={css`
-            margin-top: 15px;
-          `}
-        ></div>
-        <SubmitButton type="submit">Submit</SubmitButton>
-        <BackButton onClick={onBackClick}>Back</BackButton>
-      </form>
-    </ModalContainer>
-    <Overlay/>
+          <SubmitButton type="submit">Submit</SubmitButton>
+          <BackButton onClick={onBackClick}>Back</BackButton>
+        </form>
+      </ModalContainer>
+      <Overlay />
     </>
-
   );
 };
 
-export default SongForm;
+export default UpdateSongForm;

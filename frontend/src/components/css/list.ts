@@ -35,6 +35,41 @@ const songCardStyles = css`
     margin: 3px 0;
     font-size: 1.2rem;
   }
+  .card-buttons {
+    display: flex;
+    justify-content: right;
+    margin-top: 10px;
+
+    button {
+      padding: 5px 10px;
+      margin: 0 5px;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .delete {
+      background-color: #E9463F;
+      color: #fff;
+    }
+    
+    .delete:hover {
+      background-color: #d2362b; /* Slightly darker on hover */
+      color: #fff;
+    }
+    
+    .edit {
+      background-color: #007bff;
+      color: #fff;
+    }
+    
+    .edit:hover {
+      background-color: #0056b3;
+      color: #fff;
+    }
+    
+  }
 `;
 
 const cardParent = css`

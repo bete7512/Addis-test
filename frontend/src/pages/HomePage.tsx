@@ -7,21 +7,8 @@ import MinaLayout from "../layouts/MinaLayout";
 import Statistics from "../components/Statistics";
 import SongForm from "../components/SongForm";
 import SongList from "../components/SongList";
-import styled from "@emotion/styled";
+import { AddSongButton } from "./styled/HomePageStyled";
 
-const AddSongButton = styled.button`
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: auto; /* Align to the right */
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
 
 const HomePage: React.FC = () => {
   const [showForm, setShowForm] = React.useState(false);

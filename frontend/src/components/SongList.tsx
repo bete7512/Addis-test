@@ -11,36 +11,8 @@ import {
   fetchSongsSuccess,
   fetchSongsFailure,
 } from "../store/songs/songSlice";
-import styled from "@emotion/styled";
-const SearchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
 
-  input[type="search"] {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-right: 10px;
-    flex: 1;
-
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
-  }
-
-  button {
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-`;
+import { SearchContainer } from "./styled/SearchContainer";
 const SongList: React.FC = () => {
   const dispatch = useDispatch();
   //   const musicIMage = require("../assets/music.png");
@@ -90,6 +62,12 @@ const SongList: React.FC = () => {
   const handleCardClick = (id: number) => {
     console.log(`clicked ${id}`);
   };
+  const handleEdit = (id: number) => {
+    console.log(`Edit ${id}`);
+  };
+  const handleDelete = (id: number) => {
+    console.log(`Delete ${id}`);
+  };
 
   /*
 Type '{ children: Element[]; key: any; css: SerializedStyles; onClick: () => void; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
@@ -122,6 +100,14 @@ Type '{ children: Element[]; key: any; css: SerializedStyles; onClick: () => voi
               <p>{song.artist}</p>
               <p>{song.genre}</p>
               <p>{song.album}</p>
+            </div>
+            <div className="card-buttons">
+              <button className="edit" onClick={() => handleEdit(song.id)}>
+                Edit
+              </button>
+              <button className="delete" onClick={() => handleDelete(song.id)}>
+                Delete
+              </button>
             </div>
           </div>
         ))}
