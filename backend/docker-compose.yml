@@ -1,0 +1,25 @@
+version: '3'
+services:
+  addis-test-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3600:3600'
+    depends_on:
+      - addis-test-mongodb
+    environment:
+    - MONGO_URI=mongodb://addis-test-mongodb:27017/songdb
+    volumes:
+      - ./src:/usr/src/app/src
+    env_file:
+      - .env
+
+  addis-test-mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
