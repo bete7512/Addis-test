@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery, takeLatest } from "redux-saga/effects";
+import {  call, put, takeLatest } from "redux-saga/effects";
 import {
   addSongFailure,
   addSong,
@@ -12,6 +12,7 @@ import {
   fetchSongsStart,
 } from "./songSlice";
 import axios from "axios";
+import { startFetchStatistics } from "../statitstics/stateSlice";
 
 function* fetchSongsHandler(action: ReturnType<typeof fetchSongsStart>) {
   try {
@@ -35,6 +36,7 @@ function* addSongHandler(action: ReturnType<typeof addSong>) {
       action.payload
     );
     yield put(addSongSuccess(data));
+    yield put(startFetchStatistics())
   } catch (error: any) {
     yield put(addSongFailure(String(error.message)));
   }
@@ -56,6 +58,7 @@ function* updateSongHandler(action: ReturnType<typeof updateSongSuccess>) {
 function* removeSongHandler(action: ReturnType<typeof removeSongSuccess>) {
   try {
     yield call(axios.delete, `http://localhost:3600/api/v1/songs/${action.payload}`);
+    yield put(startFetchStatistics())
     yield put(removeSongSuccess(action.payload));
   } catch (error: any) {
     yield put(removeSongFailure(String(error.message)));

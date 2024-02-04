@@ -8,6 +8,7 @@ import { SearchContainer } from "./styled/SearchContainer";
 import { ClipLoader } from "react-spinners";
 import UpdateSongForm from "./UpdateSong";
 import { Song } from "../types/Song";
+import { startFetchStatistics } from "../store/statitstics/stateSlice";
 
 const SongList: React.FC = () => {
   const dispatch = useDispatch();
@@ -49,7 +50,9 @@ const SongList: React.FC = () => {
 
   const handlePagination = (newPage: number) => {
     setPage(newPage);
-    dispatch(fetchSongsStart({ searchQuery: searchTerm, page: newPage, pageSize }));
+    dispatch(
+      fetchSongsStart({ searchQuery: searchTerm, page: newPage, pageSize })
+    );
   };
 
   return (
@@ -74,7 +77,11 @@ const SongList: React.FC = () => {
       <h1> Song List </h1>
       <div>
         <SearchContainer>
-          <input type="search" placeholder="Search" onChange={(e) => setSearchTerm(e.target.value)} />
+          <input
+            type="search"
+            placeholder="Search"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <button onClick={handleSearch}>Search</button>
         </SearchContainer>
         <div css={cardParent}>
@@ -104,22 +111,26 @@ const SongList: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                
               ))}
-              <div>
-                <button onClick={() => handlePagination(page - 1)} disabled={page === 1}>
-                  Previous
-                </button>
-                <span>{page}</span>
-                <button onClick={() => handlePagination(page + 1)} disabled={songs.length < pageSize}>
-                  Next
-                </button>
-              </div>
             </>
-            
           ) : (
             <div>No songs found</div>
           )}
+        </div>
+        <div>
+          <button
+            onClick={() => handlePagination(page - 1)}
+            disabled={page === 1}
+          >
+            Previous
+          </button>
+          <span>{page}</span>
+          <button
+            onClick={() => handlePagination(page + 1)}
+            disabled={songs.length < pageSize}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

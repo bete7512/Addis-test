@@ -81,25 +81,31 @@ export const updateSong = async (req, res) => {
 
 export const generateAnalytics = async (req, res) => {
   try {
-    const totalSongs = await Song.countDocuments()
-    const totalArtists = await Song.distinct('artist').length
-    const totalAlbums = await Song.distinct('album').length
-    const totalGenres = await Song.distinct('genre').length
+    const totalSongs = await Song.countDocuments() || 0;
+
+    const distinctArtists = await Song.distinct('artist');
+    const totalArtists = distinctArtists.length || 0;
+
+    const distinctAlbums = await Song.distinct('album');
+    const totalAlbums = distinctAlbums.length || 0;
+
+    const distinctGenres = await Song.distinct('genre');
+    const totalGenres = distinctGenres.length || 0;
 
     const genreCounts = await Song.aggregate([
       { $group: { _id: '$genre', count: { $sum: 1 } } },
       { $project: { _id: 0, genre: '$_id', count: 1 } },
-    ])
+    ]);
 
     const artistCounts = await Song.aggregate([
       { $group: { _id: '$artist', count: { $sum: 1 } } },
       { $project: { _id: 0, artist: '$_id', count: 1 } },
-    ])
+    ]);
 
     const albumCounts = await Song.aggregate([
       { $group: { _id: '$album', count: { $sum: 1 } } },
       { $project: { _id: 0, album: '$_id', count: 1 } },
-    ])
+    ]);
 
     const analyticsData = {
       totalSongs,
@@ -109,10 +115,10 @@ export const generateAnalytics = async (req, res) => {
       genreCounts,
       artistCounts,
       albumCounts,
-    }
+    };
 
-    res.json(analyticsData)
+    res.json(analyticsData);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' + error.message })
+    res.status(500).json({ error: 'Internal Server Error ' + error.message });
   }
-}
+};

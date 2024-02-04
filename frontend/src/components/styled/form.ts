@@ -41,7 +41,8 @@ margin-right: 10px;
 border: none;
 border-radius: 4px;
 cursor: pointer;
-
+transition: background-color 0.3s ease;
+outline: none;
 background-color: #007bff;
 color: #fff;
   &:hover {
@@ -55,6 +56,9 @@ const BackButton = styled.button`
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
+  transition: background-color 0.3s ease;
+  outline: none;
+
   cursor: pointer;
 
   &:hover {

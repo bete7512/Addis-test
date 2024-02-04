@@ -1,36 +1,82 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import React, { useEffect } from "react";
 import { css } from "@emotion/react";
-import { AnalyticsCard, AnalyticsTitle, AnalyticsContainer,AnalyticsTableContainer } from "./styled/statistics";
-import { AnalyticsData } from "../types/Statitstics-type";
+import {
+  AnalyticsCard,
+  AnalyticsTitle,
+  AnalyticsContainer,
+  AnalyticsTableContainer,
+} from "./styled/statistics";
+import { useDispatch, useSelector } from "react-redux";
+import { startFetchStatistics } from "../store/statitstics/stateSlice";
+/*
+export interface AnalyticsData {
+    totalSongs: number;
+    totalArtists: number;
+    totalAlbums: number;
+    totalGenres: number;
+    genreCounts: { genre: string; count: number }[];
+    artistCounts: { artist: string; count: number }[];
+    albumCounts: { album: string; count: number }[];
+  }
+*/
+const Statistics: React.FC = () => {
+  const statistics = useSelector((state: any) => state.statistics.statistics);
+  const loading = useSelector((state: any) => state.songs.loading);
+  const error = useSelector((state: any) => state.songs.error);
+  const dispatch = useDispatch();
 
-const sampleAnalyticsData: AnalyticsData = {
-  totalSongs: 100,
-  totalArtists: 50,
-  totalAlbums: 30,
-  totalGenres: 20,
-  genreCounts: [
-    { genre: "Rock", count: 30 },
-    { genre: "Pop", count: 25 },
-    { genre: "Jazz", count: 15 },
-  ],
-  artistCounts: [
-    { artist: "John Doe", count: 10 },
-    { artist: "Jane Smith", count: 15 },
-    { artist: "Jane Smith", count: 15 },
-    { artist: "Jane Smith", count: 15 },
-    { artist: "Jane Smith", count: 15 },
-    { artist: "Jane Smith", count: 15 },
-    { artist: "Bob Johnson", count: 25 },
-  ],
-  albumCounts: [
-    { album: "Album 1", count: 15 },
-    { album: "Album 2", count: 10 },
-    { album: "Album 3", count: 5 },
-  ],
+  useEffect(() => {
+    dispatch(startFetchStatistics());
+  }, [dispatch]);
+  console.log(statistics);
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        align-items: right;
+        padding: 10px;
+      `}
+    >
+      <h1>Statistics</h1>
+
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      {!loading && !error && Object.keys(statistics).length > 0 && (
+        <>
+          <AnalyticsContainer>
+            <AnalyticsCard>
+              <AnalyticsTitle>Total Songs</AnalyticsTitle>
+              <p>{statistics?.totalSongs}</p>
+            </AnalyticsCard>
+
+            <AnalyticsCard>
+              <AnalyticsTitle>Total Artists</AnalyticsTitle>
+              <p>{statistics?.totalArtists}</p>
+            </AnalyticsCard>
+
+            <AnalyticsCard>
+              <AnalyticsTitle>Total Albums</AnalyticsTitle>
+              <p>{statistics?.totalAlbums}</p>
+            </AnalyticsCard>
+
+            <AnalyticsCard>
+              <AnalyticsTitle>Total Genres</AnalyticsTitle>
+              <p>{statistics?.totalGenres}</p>
+            </AnalyticsCard>
+          </AnalyticsContainer>
+
+          {/* <AnalyticsTableContainer>
+          {renderTable(statistics?.genreCounts, "genre")}
+            {renderTable(statistics?.artistCounts, "artist")}
+            {renderTable(statistics?.albumCounts, "album")}
+          </AnalyticsTableContainer> */}
+        </>
+      )}
+    </div>
+  );
 };
-
-
 
 const renderTable = (data: any, keyName: string) => {
   const [startIndex, setStartIndex] = React.useState(0);
@@ -43,6 +89,7 @@ const renderTable = (data: any, keyName: string) => {
       setStartIndex(startIndex + rowsToShow);
     }
   };
+
   return (
     <AnalyticsCard>
       <table
@@ -91,46 +138,5 @@ const renderTable = (data: any, keyName: string) => {
   );
 };
 
-const Statistics: React.FC = () => {
-  return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        align-items: right;
-        padding: 10px;
-      `}
-    >
-      <h1>Statistics</h1>
-      <AnalyticsContainer>
-        <AnalyticsCard>
-          <AnalyticsTitle>Total Songs</AnalyticsTitle>
-          <p>{sampleAnalyticsData.totalSongs}</p>
-        </AnalyticsCard>
-
-        <AnalyticsCard>
-          <AnalyticsTitle>Total Artists</AnalyticsTitle>
-          <p>{sampleAnalyticsData.totalArtists}</p>
-        </AnalyticsCard>
-
-        <AnalyticsCard>
-          <AnalyticsTitle>Total Albums</AnalyticsTitle>
-          <p>{sampleAnalyticsData.totalAlbums}</p>
-        </AnalyticsCard>
-
-        <AnalyticsCard>
-          <AnalyticsTitle>Total Genres</AnalyticsTitle>
-          <p>{sampleAnalyticsData.totalGenres}</p>
-        </AnalyticsCard>
-      </AnalyticsContainer>
-
-      <AnalyticsTableContainer>
-        {renderTable(sampleAnalyticsData.genreCounts, "genre")}
-        {renderTable(sampleAnalyticsData.artistCounts, "artist")}
-        {renderTable(sampleAnalyticsData.albumCounts, "album")}
-      </AnalyticsTableContainer>
-    </div>
-  );
-};
 
 export default Statistics;

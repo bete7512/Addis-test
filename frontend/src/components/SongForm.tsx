@@ -26,17 +26,10 @@ const SongForm: React.FC<SongFormProps> = ({ onBackClick }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(
-      "----------------------------------",
-      "title",
-      title,
-      "artist",
-      artist,
-      "album",
-      album,
-      "genre",
-      genre
-    );
+    if (!title || !artist || !album || !genre) {
+      alert("Please fill in all fields");
+      return;
+    }
     const song: Song = {
       title: title,
       artist: artist,
@@ -45,10 +38,7 @@ const SongForm: React.FC<SongFormProps> = ({ onBackClick }) => {
     };
 
     dispatch(addSong(song));
-    // setAlbum("");
-    // setArtist("");
-    // setGenre("");
-    // setTitle("");
+    onBackClick();
   };
 
   return (
@@ -141,10 +131,10 @@ const SongForm: React.FC<SongFormProps> = ({ onBackClick }) => {
               margin-top: 15px;
             `}
           ></div>
-          <SubmitButton type="submit" onClick={handleSubmit}>
+          <SubmitButton css={css`outline: none`} type="submit" onClick={handleSubmit}>
             Submit
           </SubmitButton>
-          <BackButton onClick={onBackClick}>Back</BackButton>
+          <BackButton css={css`outline: none`} onClick={onBackClick}>Back</BackButton>
         </form>
       </ModalContainer>
       <Overlay />
