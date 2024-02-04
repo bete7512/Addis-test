@@ -6,6 +6,8 @@ import rootReducer from "./store/rootReducer";
 import rootSaga from "./store/rootSaga";
 import HomePage from "./pages/HomePage";
 import { Center, Container } from "./components/styled/Container";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
   reducer: rootReducer,
@@ -20,6 +22,7 @@ const App: React.FC = () => {
     <Center>
       <Container>
         <Provider store={store}>
+          <ToastContainer />
           <HomePage />
         </Provider>
       </Container>

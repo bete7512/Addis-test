@@ -1,3 +1,4 @@
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Song } from "../../types/Song";
 
@@ -24,6 +25,7 @@ const songSlice = createSlice({
   reducers: {
 
     addSong: (state, action: PayloadAction<Song>) => {
+      console.log("this is action", action)
       state.loading = false;
     },
     addSongSuccess: (state, action: PayloadAction<Song>) => {
@@ -44,6 +46,7 @@ const songSlice = createSlice({
     },
 
     updateSongStart: (state, action: PayloadAction<Song>) => {
+      console.log("this is action", action)
       state.loading = true;
       state.error = null;
     },
@@ -57,7 +60,7 @@ const songSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
-    removeSongStart: (state, action: PayloadAction<string>) => {
+    removeSongStart: (state, _action: PayloadAction<string>) => {
       state.loading = true;
       state.error = null;
     },
@@ -69,7 +72,7 @@ const songSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
-    fetchSongsStart: (state, action: PayloadAction<SongQuery>) => {
+    fetchSongsStart: (state, _action: PayloadAction<SongQuery>) => {
       state.loading = true;
       state.error = null;
     },
@@ -104,89 +107,6 @@ export const {
   
   export default songSlice.reducer;
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   export const addSongAsync = (song:{ title : string, artist : string, album : string, genre : string }): AppThunk => async (dispatch) => {
-//     try {
-//       dispatch(addSongStart());
-//       const response = await axios.post(
-//         "http://localhost:3600/api/v1/songs",
-//         { title : song.title, artist : song.artist, album : song.album, genre : song.genre }
-//       );
-//       dispatch(addSongSuccess(response.data));
-//     } catch (error : any) {
-//       dispatch(addSongFailure(error.message));
-//     }
-//   };
-//   export const updateSongAsync =
-//     (song: { id: string; title: string; artist: string; album: string; genre: string }): AppThunk =>
-//     async (dispatch) => {
-//       try {
-//         dispatch(updateSongStart());
-//         const response = await axios.put(
-//           `http://localhost:3600/api/v1/songs/${song.id}`,
-//           { title: song.title, artist: song.artist, album: song.album, genre: song.genre }
-//         );
-//         dispatch(updateSongSuccess(response.data));
-//       } catch (error: any) {
-//         dispatch(updateSongFailure(error.message));
-//       }
-//     };
-  
-//   export const removeSongAsync =
-//     (songId: string): AppThunk =>
-//     async (dispatch) => {
-//       try {
-//         dispatch(removeSongStart());
-//         await axios.delete(`http://localhost:3600/api/v1/songs/${songId}`);
-//         dispatch(removeSongSuccess(songId));
-//       } catch (error: any) {
-//         dispatch(removeSongFailure(error.message));
-//       }
-//     };
-  
-
-// export const fetchSongs = (): AppThunk => async (dispatch) => {
-//   try {
-
-//     console.log("am the one+++++++++++++++++++++++++++++++")
-//     dispatch(fetchSongsStart());
-//     const response = await axios.get("http://localhost:3600/api/v1/songs");
-//     dispatch(fetchSongs(response.data));
-//   } catch (error: any) {
-//     dispatch(fetchSongsFailure(error.message));
-//   }
-// };
 
 
 

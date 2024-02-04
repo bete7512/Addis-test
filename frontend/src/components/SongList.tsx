@@ -8,13 +8,12 @@ import { SearchContainer } from "./styled/SearchContainer";
 import { ClipLoader } from "react-spinners";
 import UpdateSongForm from "./UpdateSong";
 import { Song } from "../types/Song";
-import { startFetchStatistics } from "../store/statitstics/stateSlice";
 
 const SongList: React.FC = () => {
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize] = useState(8);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
@@ -88,7 +87,7 @@ const SongList: React.FC = () => {
           {error ? (
             <div>Error: {error}</div>
           ) : loading ? (
-            <ClipLoader color="#000" />
+            <ClipLoader css={css`width: 100px;`} color="#000" />
           ) : songs && songs.length ? (
             <>
               {songs.map((song: any) => (

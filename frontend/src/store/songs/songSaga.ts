@@ -11,6 +11,8 @@ import {
   updateSongSuccess,
   fetchSongsStart,
 } from "./songSlice";
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { startFetchStatistics } from "../statitstics/stateSlice";
 
@@ -19,7 +21,7 @@ function* fetchSongsHandler(action: ReturnType<typeof fetchSongsStart>) {
     const { page, pageSize, searchQuery } = action.payload;
 
     // Construct the API URL with pagination and search parameters
-    const apiUrl = `http://localhost:3600/api/v1/songs?page=${page}&pageSize=${pageSize}&search=${searchQuery}`;
+    const apiUrl = `https://addis-software-song-api.onrender.com/api/v1/songs?page=${page}&pageSize=${pageSize}&search=${searchQuery}`;
 
     const { data } = yield call(axios.get, apiUrl);
     yield put(fetchSongs(data));
@@ -30,13 +32,15 @@ function* fetchSongsHandler(action: ReturnType<typeof fetchSongsStart>) {
 
 function* addSongHandler(action: ReturnType<typeof addSong>) {
   try {
+    const notify = () => toast("Song added successfully!");
     const { data } = yield call(
       axios.post,
-      "http://localhost:3600/api/v1/songs",
+      "https://addis-software-song-api.onrender.com/api/v1/songs",
       action.payload
     );
     yield put(addSongSuccess(data));
     yield put(startFetchStatistics())
+    notify()
   } catch (error: any) {
     yield put(addSongFailure(String(error.message)));
   }
@@ -44,12 +48,14 @@ function* addSongHandler(action: ReturnType<typeof addSong>) {
 
 function* updateSongHandler(action: ReturnType<typeof updateSongSuccess>) {
   try {
+    const notify = () => toast("Song updated successfully!");
     const { data } = yield call(
       axios.put,
-      `http://localhost:3600/api/v1/songs/${action.payload._id}`,
+      `https://addis-software-song-api.onrender.com/api/v1/songs/${action.payload._id}`,
       action.payload
     );
     yield put(updateSongSuccess(data));
+    notify()
   } catch (error: any) {
     yield put(updateSongFailure(String(error.message)));
   }
@@ -57,8 +63,10 @@ function* updateSongHandler(action: ReturnType<typeof updateSongSuccess>) {
 
 function* removeSongHandler(action: ReturnType<typeof removeSongSuccess>) {
   try {
-    yield call(axios.delete, `http://localhost:3600/api/v1/songs/${action.payload}`);
+    const notify = () => toast("Song removed successfully!");
+    yield call(axios.delete, `https://addis-software-song-api.onrender.com/api/v1/songs/${action.payload}`);
     yield put(startFetchStatistics())
+    notify()
     yield put(removeSongSuccess(action.payload));
   } catch (error: any) {
     yield put(removeSongFailure(String(error.message)));

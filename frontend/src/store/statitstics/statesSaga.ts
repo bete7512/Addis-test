@@ -4,7 +4,7 @@ import axios from "axios";
 
 function* fetchStatisticsHandler() {
   try {
-    const apiUrl = `http://localhost:3600/api/v1/analytics`;
+    const apiUrl = `https://addis-software-song-api.onrender.com/api/v1/analytics`;
     const { data } = yield call(axios.get, apiUrl);
     console.log("this is data", data)
     yield put(fetchStatisticsSuccess(data));

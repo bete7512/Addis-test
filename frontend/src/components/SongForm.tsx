@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import Back from "../assets/back.svg";
 import {
@@ -10,8 +10,8 @@ import {
   BackButton,
   Overlay,
 } from "./styled/form";
-import { addSong, addSongFailure } from "../store/songs/songSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { addSong } from "../store/songs/songSlice";
+import { useDispatch } from "react-redux";
 import { Song } from "../types/Song";
 interface SongFormProps {
   onBackClick: () => void;
