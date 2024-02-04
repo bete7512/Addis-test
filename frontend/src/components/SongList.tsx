@@ -2,76 +2,56 @@
 import { css } from "@emotion/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ClipLoader from "react-spinners/ClipLoader";
-import { useNavigate } from "react-router-dom";
-import SongCoverImage from "../assets/first.jpg"; // Adjust the import path as needed
 import { cardParent, songCardStyles } from "./css/list";
-import {
-  fetchSongsStart,
-  fetchSongsSuccess,
-  fetchSongsFailure,
-} from "../store/songs/songSlice";
-
+import { fetchSongsStart, removeSongStart } from "../store/songs/songSlice";
 import { SearchContainer } from "./styled/SearchContainer";
+import { ClipLoader } from "react-spinners";
+import UpdateSongForm from "./UpdateSong";
+import { Song } from "../types/Song";
+
 const SongList: React.FC = () => {
   const dispatch = useDispatch();
-  //   const musicIMage = require("../assets/music.png");
-  const [songs, setSongs] = useState([
-    {
-      id: 0,
-      title: "Tikur Sew",
-      artist: "Teddy Afro",
-      album: "Tikur Sew",
-      genre: "Jazz",
-    },
-    {
-      id: 1,
-      title: "Tikur Sew",
-      artist: "Teddy Afro",
-      album: "Tikur Sew",
-      genre: "Jazz",
-    },
-    {
-      id: 2,
-      title: "Tikur Sew",
-      artist: "Teddy Afro",
-      album: "Tikur Sew",
-      genre: "Jazz",
-    },
-    {
-      id: 3,
-      title: "Tikur Sew",
-      artist: "Teddy Afro",
-      album: "Tikur Sew",
-      genre: "Jazz",
-    },
-    {
-      id: 4,
-      title: "Tikur Sew",
-      artist: "Teddy Afro",
-      album: "Tikur Sew",
-      genre: "Jazz",
-    },
-  ]);
-  //   useSelector((state: any) => state.songs);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState("");
+  const [artist, setArtist] = useState("");
+  const [album, setAlbum] = useState("");
+  const [genre, setGenre] = useState("");
+  const [id, setId] = useState("");
+  const songs = useSelector((state: any) => state.songs.songs);
+  const loading = useSelector((state: any) => state.songs.loading);
+  const error = useSelector((state: any) => state.songs.error);
 
-  //   useEffect(() => {
-  //     dispatch(fetchSongsStart());
-  //   }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchSongsStart({ searchQuery: searchTerm, page, pageSize }));
+  }, [dispatch, searchTerm, page, pageSize]);
 
-  const handleCardClick = (id: number) => {
-    console.log(`clicked ${id}`);
+  const handleSearch = () => {
+    setPage(1);
+    dispatch(fetchSongsStart({ searchQuery: searchTerm, page: 1, pageSize }));
   };
-  const handleEdit = (id: number) => {
-    console.log(`Edit ${id}`);
+
+  const handleEdit = (song: Song) => {
+    setId(song._id || "");
+    setTitle(song.title);
+    setArtist(song.artist);
+    setAlbum(song.album);
+    setGenre(song.genre);
+    setIsEditing(true);
   };
-  const handleDelete = (id: number) => {
+
+  const handleDelete = (id: string) => {
     console.log(`Delete ${id}`);
+    dispatch(removeSongStart(id));
   };
 
-  /*
-Type '{ children: Element[]; key: any; css: SerializedStyles; onClick: () => void; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
-  Property 'css' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'*/
+  const handlePagination = (newPage: number) => {
+    setPage(newPage);
+    dispatch(fetchSongsStart({ searchQuery: searchTerm, page: newPage, pageSize }));
+  };
+
   return (
     <div
       css={css`
@@ -79,40 +59,69 @@ Type '{ children: Element[]; key: any; css: SerializedStyles; onClick: () => voi
         align-items: center;
       `}
     >
-      <h2> Song List </h2>
-      {/* {songs.loading ? (
-        <ClipLoader color={"#36D7B7"} loading={true} css={override} size={50} />
-      ) : ( */}
-      <SearchContainer>
-        <input type="search" placeholder="Search" />
-        <button>Search</button>
-      </SearchContainer>
-      <div css={cardParent}>
-        {songs.map((song: any) => (
-          <div
-            key={song.id}
-            css={songCardStyles}
-            onClick={() => handleCardClick(song.id)}
-          >
-            {/* <img src={SongCoverImage} alt="Song Cover" /> */}
-            <div>
-              <h1>{song.title}</h1>
-              <p>{song.artist}</p>
-              <p>{song.genre}</p>
-              <p>{song.album}</p>
-            </div>
-            <div className="card-buttons">
-              <button className="edit" onClick={() => handleEdit(song.id)}>
-                Edit
-              </button>
-              <button className="delete" onClick={() => handleDelete(song.id)}>
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+      {isEditing && (
+        <UpdateSongForm
+          onBackClick={() => {
+            setIsEditing(false);
+          }}
+          _id={id}
+          title={title}
+          artist={artist}
+          album={album}
+          genre={genre}
+        />
+      )}
+      <h1> Song List </h1>
+      <div>
+        <SearchContainer>
+          <input type="search" placeholder="Search" onChange={(e) => setSearchTerm(e.target.value)} />
+          <button onClick={handleSearch}>Search</button>
+        </SearchContainer>
+        <div css={cardParent}>
+          {error ? (
+            <div>Error: {error}</div>
+          ) : loading ? (
+            <ClipLoader color="#000" />
+          ) : songs && songs.length ? (
+            <>
+              {songs.map((song: any) => (
+                <div key={song.id} css={songCardStyles}>
+                  <div>
+                    <h1>{song.title}</h1>
+                    <p>{song.artist}</p>
+                    <p>{song.genre}</p>
+                    <p>{song.album}</p>
+                  </div>
+                  <div className="card-buttons">
+                    <button className="edit" onClick={() => handleEdit(song)}>
+                      Edit
+                    </button>
+                    <button
+                      className="delete"
+                      onClick={() => handleDelete(song._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                
+              ))}
+              <div>
+                <button onClick={() => handlePagination(page - 1)} disabled={page === 1}>
+                  Previous
+                </button>
+                <span>{page}</span>
+                <button onClick={() => handlePagination(page + 1)} disabled={songs.length < pageSize}>
+                  Next
+                </button>
+              </div>
+            </>
+            
+          ) : (
+            <div>No songs found</div>
+          )}
+        </div>
       </div>
-      {/* )} */}
     </div>
   );
 };

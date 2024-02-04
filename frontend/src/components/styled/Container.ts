@@ -8,6 +8,7 @@ const Center = styled.div`
   justify-content: center;
   align-items: center;
   width: 100vw;
+  overflow-x: hidden;
 `;
 
 const Container = styled.div`
@@ -15,6 +16,7 @@ const Container = styled.div`
   background-color: #000;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 
   @media (min-width: 640px) {
     max-width: 640px;

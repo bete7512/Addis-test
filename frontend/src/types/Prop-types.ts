@@ -1,7 +1,8 @@
 export interface SongFormProps {
     onBackClick: () => void;
-    title?: string;
-    artist?: string;
-    album?: string;
-    genre?: string;
+    _id: string;
+    title: string;
+    artist: string;
+    album: string;
+    genre: string;
   }

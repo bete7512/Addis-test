@@ -19,7 +19,8 @@ const AnalyticsCard = styled.div`
   padding: 5px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  width: 15vw;
+  width: 20%;
+  min-width: 200px;
 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;

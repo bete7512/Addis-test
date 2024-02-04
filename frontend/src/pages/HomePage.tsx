@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
       <div css={css`display: flex; justify-content: space-between; margin-right: 10px`}>
         <div></div>
         <AddSongButton onClick={() => setShowForm(true)}>
-          Add Song
+          Add New Song
         </AddSongButton>
       </div>
       <Statistics />

@@ -26,13 +26,21 @@ export const createSong = async (req, res) => {
 
 export const listSongs = async (req, res) => {
   try {
-    const songs = await Song.find()
-    res.json(songs)
+    const { page = 1, pageSize = 10, search } = req.query;
+
+    const query = search ? { title: { $regex: new RegExp(search, 'i') } } : {};
+
+    const songs = await Song.find(query)
+      .skip((page - 1) * pageSize)
+      .limit(Number(pageSize));
+
+    res.json(songs);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' })
-    return
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
+
 
 export const getSong = async (req, res) => {
   try {
