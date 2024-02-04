@@ -10,7 +10,7 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = (data: any, _title: string) => {
   const [startIndex, setStartIndex] = useState(0);
-  const rowsToShow = 2;
+  const rowsToShow = 40;
   const key = data.title;
   const visibleData = data.data.slice(startIndex, startIndex + rowsToShow);
   const handleLoadMore = () => {
@@ -34,7 +34,7 @@ const Table: React.FC<TableProps> = (data: any, _title: string) => {
               display: flex;
               justify-content: space-between;
               font-weight: bold;
-              font-size: 2rem;
+              font-size: 1.5rem;
             `}
           >
             <th>{key}</th>
@@ -55,10 +55,10 @@ const Table: React.FC<TableProps> = (data: any, _title: string) => {
             </tr>
           ))}
         </tbody>
-        {data.length > rowsToShow && startIndex + rowsToShow < data.length && (
+        {data.length > rowsToShow && (
           <tfoot>
             <tr>
-              <td colSpan={2}>
+              <td colSpan={1}>
                 <button onClick={handleLoadMore}>Load More</button>
               </td>
             </tr>
