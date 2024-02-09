@@ -24,22 +24,3 @@ exports.connect = () => {
     }
     return mongoose.connection
 }
-
-
-
-// import mongoose from 'mongoose';
-// import { mongoURI } from './config';
-
-// mongoose.Promise = global.Promise;
-
-// const connectToMongoDB = async () => {
-//   try {
-//     await mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
-//     console.log('MongoDB Connected');
-//   } catch (error) {
-//     console.error('Error connecting to MongoDB:', error);
-//     throw error;
-//   }
-// };
-
-// export default connectToMongoDB;
